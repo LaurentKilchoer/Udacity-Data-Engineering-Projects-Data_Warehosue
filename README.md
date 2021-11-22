@@ -51,7 +51,7 @@ Sample Data:
 #### Launch a Redshift Cluster.
 
 #### Setup Configurations 
-Setup the dwh.cfg file (File not added in this repository). File format for **dwh.cfg**
+Setup the dwh.cfg file (File not added in this repository). File format for **dwh.cfg**:
 
 ```
 [CLUSTER]
