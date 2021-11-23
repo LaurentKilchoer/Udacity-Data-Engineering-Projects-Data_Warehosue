@@ -8,9 +8,9 @@ config.read('dwh.cfg')
 staging_events_table_drop = "DROP TABLE IF EXISTS staging_events;"
 staging_songs_table_drop = "DROP TABLE IF EXISTS staging_songs;"
 songplay_table_drop = "DROP TABLE IF EXISTS songplay;"
-user_table_drop = "DROP TABLE IF EXISTS user;"
-song_table_drop = "DROP TABLE IF EXISTS song;"
-artist_table_drop = "DROP TABLE IF EXISTS artist;"
+user_table_drop = "DROP TABLE IF EXISTS users;"
+song_table_drop = "DROP TABLE IF EXISTS songs;"
+artist_table_drop = "DROP TABLE IF EXISTS artists;"
 time_table_drop = "DROP TABLE IF EXISTS time;"
 
 staging_events_table_create= ("""
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS songplay
     location VARCHAR,
     user_agent VARCHAR
 )
-DISTKEY KEY
+DISTSTYLE KEY
 DISTKEY (start_time)
 SORTKEY (start_time)
 """)
@@ -74,7 +74,7 @@ SORTKEY (start_time)
 user_table_create = ("""
 CREATE TABLE IF NOT EXISTS users
 (
-    user_id INTEGER PRIMARY KEY,
+    userId INTEGER PRIMARY KEY,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     gender CHAR(1),
@@ -86,7 +86,7 @@ SORTKEY (userId);
 song_table_create = ("""
 CREATE TABLE IF NOT EXISTS songs
 (
-    song_id INTEGER PRIMARY KEY,
+    song_id VARCHAR PRIMARY KEY,
     title VARCHAR,
     artist_id VARCHAR,
     year INTEGER,
@@ -98,7 +98,7 @@ SORTKEY (song_id)
 artist_table_create = ("""
 CREATE TABLE IF NOT EXISTS artists
 (
-    artist_id INTEGER PRIMRARY KEY,
+    artist_id VARCHAR PRIMARY KEY,
     name VARCHAR,
     location VARCHAR,
     lattitude FLOAT,
@@ -142,7 +142,7 @@ staging_songs_copy = ("""
 # FINAL TABLES
 
 songplay_table_insert = ("""
-INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
+INSERT INTO songplay (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
 SELECT DISTINCT
        TIMESTAMP 'epoch' + (staging_events.ts / 1000) * INTERVAL '1 second' as start_time,
                 staging_events.userId,
